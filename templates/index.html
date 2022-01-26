@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Judge System: DataScience 2022</title>
+</head>
+<body>
+<h1 class="text-center">Public Leaderboard</h1>
+<table class="center">
+    <tr>
+        <th>#</th>
+        <th>Name</th>
+        <th>Best Accuracy</th>
+    </tr>
+    {% for u in user_scores %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ u['user_name'] }}</td>
+            <td>{{ '%.4f' | format(u['score']) }}</td>
+        </tr>
+    {% endfor %}
+</table>
+
+<style>
+    .text-center {
+        text-align: center;
+    }
+
+    .center {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    table, tr, td, th {
+        border: 1px solid black;
+    }
+</style>
+</body>
+</html>
