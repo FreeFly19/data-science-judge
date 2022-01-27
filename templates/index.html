@@ -8,14 +8,35 @@
     <title>Judge System: DataScience 2022</title>
 </head>
 <body>
-<h1 class="text-center">Public Leaderboard</h1>
+
+<h1 class="text-center">Private Leaderboard</h1>
+<table class="center">
+    <tr>
+        <th>#</th>
+        <th>Name</th>
+        <th>Best Accuracy</th>
+        <th>Solution Link</th>
+    </tr>
+    {% for s in private_user_best_submissions %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ s['user_name'] }}</td>
+            <td>{{ '%.4f' | format(s['submission']['private_board_score']) }}</td>
+            <td><a href="/solutions/{{ s['submission']['id'] }}/code">See Solution</a></td>
+        </tr>
+    {% endfor %}
+</table>
+
+<hr>
+
+<h2 class="text-center">Public Leaderboard</h2>
 <table class="center">
     <tr>
         <th>#</th>
         <th>Name</th>
         <th>Best Accuracy</th>
     </tr>
-    {% for u in user_scores %}
+    {% for u in public_user_scores %}
         <tr>
             <td>{{ loop.index }}</td>
             <td>{{ u['user_name'] }}</td>
@@ -23,6 +44,8 @@
         </tr>
     {% endfor %}
 </table>
+
+
 
 <style>
     .text-center {

@@ -4,7 +4,7 @@ import time
 from os.path import exists
 from threading import Lock
 
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, send_file
 from sklearn.datasets import fetch_openml
 from sklearn.metrics import accuracy_score
 import numpy as np
@@ -34,18 +34,37 @@ def index():
         if public_board_user_best[s['user_name']] < s['public_board_score']:
             public_board_user_best[s['user_name']] = s['public_board_score']
 
-    user_scores = []
+    public_user_scores = []
     for user_name in public_board_user_best:
-        user_scores.append({'user_name': user_name, 'score': public_board_user_best[user_name]})
+        public_user_scores.append({'user_name': user_name, 'score': public_board_user_best[user_name]})
 
-    user_scores = list(sorted(user_scores, key=lambda us: -us['score']))
-    return render_template('index.html', user_scores=user_scores)
+    public_user_scores = list(sorted(public_user_scores, key=lambda us: -us['score']))
+
+
+    private_board_user_best_submission= {}
+
+    for s in submissions:
+        if s['user_name'] not in private_board_user_best_submission:
+            private_board_user_best_submission[s['user_name']] = s
+        if private_board_user_best_submission[s['user_name']]['private_board_score'] < s['private_board_score']:
+            private_board_user_best_submission[s['user_name']] = s
+
+    private_user_best_submissions = []
+    for user_name in private_board_user_best_submission:
+        private_user_best_submissions.append({'user_name': user_name, 'submission': private_board_user_best_submission[user_name]})
+
+    private_user_best_submissions = list(sorted(private_user_best_submissions, key=lambda us: -us['submission']['private_board_score']))
+
+    return render_template('index.html', public_user_scores=public_user_scores, private_user_best_submissions=private_user_best_submissions)
 
 
 @app.get('/data')
 def get_date():
     return jsonify(json_data)
 
+@app.get('/solutions/<int:id>/code')
+def get_solution(id):
+    return send_file('data/' + str(id) + '/code.py')
 
 lock = Lock()
 @app.post('/submit')
