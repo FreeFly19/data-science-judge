@@ -77,22 +77,22 @@ def predict():
         public_board_score = accuracy_score(y[:len(y)//2], np.array(predictions)[:len(y)//2])
         private_board_score = accuracy_score(y[len(y)//2:], np.array(predictions)[len(y)//2:])
 
-        id = len(submissions)
-        submissions.append({
-            'id': id,
-            'time': int(time.time()),
-            'user_name': user_name,
-            'public_board_score': public_board_score,
-            'private_board_score': private_board_score,
-        })
-        os.makedirs('data/' + str(id), exist_ok=True)
-        with open('data/' + str(id) + '/predictions.json', 'w') as f_preds:
-            json.dump(predictions, f_preds)
-        with open('data/' + str(id) + '/code.py', 'w') as f_code:
-            f_code.write(code)
-        with open(submissions_json, 'w') as f:
-            json.dump(submissions, f)
-        return jsonify({'score': public_board_score})
+        # id = len(submissions)
+        # submissions.append({
+        #     'id': id,
+        #     'time': int(time.time()),
+        #     'user_name': user_name,
+        #     'public_board_score': public_board_score,
+        #     'private_board_score': private_board_score,
+        # })
+        # os.makedirs('data/' + str(id), exist_ok=True)
+        # with open('data/' + str(id) + '/predictions.json', 'w') as f_preds:
+        #     json.dump(predictions, f_preds)
+        # with open('data/' + str(id) + '/code.py', 'w') as f_code:
+        #     f_code.write(code)
+        # with open(submissions_json, 'w') as f:
+        #     json.dump(submissions, f)
+        return jsonify({'score': (public_board_score + private_board_score) / 2})
 
 
 app.run(host='0.0.0.0', port=8989, threaded=True)
